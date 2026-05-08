@@ -1,25 +1,32 @@
 #!/bin/bash
 
-#kontrollera att användare har root / är Superuser
-
 echo "Start."
 
+#Kontrol att användare har root access.
 if [ "$EUID" -ne 0 ];
 	then echo "Programmet måste köras som root. (Superuser)"
 	exit 1
 fi
 
+#for loop igenom alla användare som blivit givet.
 for user in "$@"; do
 	if id "$user" &>/dev/null; then
 		echo "Användarnamntet '$user' finns redan i listan."
 		continue
 	fi
-	
+	#User shortcut var.
+	USER_DIR="/home/$user"
+
 	useradd -m "$user"
 	echo "Användare $user har skapats"
-	#Här skapar vi filer och ger de läs och skriv rättigheter till den nya användaren.
-	mkdir -p "/home/$user/Documents" "/home/$user/Downloads" "/home/$user/Work"
-	chmod 700 "/home/$user/Documents" "/home/$user/Downloads" "/home/$user/Work"
+	#Här skapar vi filer till användaren.
+	mkdir -p "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/Work"
+	#Här ger vi rättigheter till rätt användare.
+	chmod 700 "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/Work"
+
+	chown -R "$user:$user""$USER_DIR"
+
+	echo "$USER_DIR"
 done
 
 echo "Klart."
