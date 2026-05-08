@@ -25,10 +25,10 @@ for user in "$@"; do
 	#skapar välkoms fil.
 	WELCOME_FILE="$USER_DIR/welcome.txt"
 	#Lägger in text i rad 1.
-	echo "välkommen $user" > "$WELCOME_FILE"
+	echo "Välkommen $user" > "$WELCOME_FILE"
 
 	echo "Andra användare i systemet:" >> "$WELCOME_FILE"
-	awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd | grep -v >> "$WELCOME_FILE"
+	awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd | grep -v "^$user$" >> "$WELCOME_FILE"
 
 	#Här ger vi rättigheter till rätt användare.
 	chmod 700 "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/Work"
