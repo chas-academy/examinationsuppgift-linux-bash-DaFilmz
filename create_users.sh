@@ -24,7 +24,7 @@ for user in "$@"; do
 	#Här ger vi rättigheter till rätt användare.
 	chmod 700 "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/Work"
 
-	chown -R "$user:$user""$USER_DIR"
+	chown -R "$user:$user" "$USER_DIR"
 
 	echo "$USER_DIR"
 done
