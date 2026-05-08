@@ -27,7 +27,6 @@ for user in "$@"; do
 	#Lägger in text i rad 1.
 	echo "Välkommen $user" > "$WELCOME_FILE"
 
-	echo "Andra användare i systemet:" >> "$WELCOME_FILE"
 	awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd | grep -v "^$user$" >> "$WELCOME_FILE"
 
 	#Här ger vi rättigheter till rätt användare.
