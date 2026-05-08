@@ -28,10 +28,11 @@ for user in "$@"; do
 	echo "välkommen $user" > "$WELCOME_FILE"
 
 	echo "Andra användare i systemet:" >> "$WELCOME_FILE"
-	cut -d: -f1 /etc/passwd >> "$WELCOME_FILE"
+	awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd | grep -v >> "$WELCOME_FILE"
 
 	#Här ger vi rättigheter till rätt användare.
 	chmod 700 "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/Work"
+	chmod 600 "$WELCOME_FILE"
 
 	chown -R "$user:$user" "$USER_DIR"
 
