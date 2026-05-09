@@ -34,7 +34,7 @@ for user in "$@"; do
 	#Lägger in text i rad.
 	{
 		echo "Välkommen $user"
-		awk -F: -v excemption="$user" '$1 != excemption { print $1 }' /etc/passwd
+		cut -d: -f1 /etc/passwd | grep -v "^$user$"
 	} > "$USER_DIR/welcome.txt"
 
 	#Här ger vi rättigheter till rätt användare.
