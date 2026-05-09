@@ -8,6 +8,8 @@ if [ "$EUID" -ne 0 ];
 	exit 1
 fi
 
+
+
 #for loop igenom alla användare som blivit givet.
 for user in "$@"; do
 	if id "$user" &>/dev/null; then
@@ -16,26 +18,28 @@ for user in "$@"; do
 	fi
 	#User shortcut var.
 	USER_DIR="/home/$user"
+	EXSISTING_USERS=$(cut -d: -f1 /etc/passwd)
 
 	useradd -m "$user"
 	echo "Användare $user har skapats"
+
 	#Här skapar vi filer till användaren.
 	mkdir -p "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/Work"
 
 	#skapar välkoms fil.
 	WELCOME_FILE="$USER_DIR/welcome.txt"
+
 	#Lägger in text i rad 1.
 	echo "Välkommen $user" > "$WELCOME_FILE"
 
-	awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd | grep -v "^$user$" >> "$WELCOME_FILE"
+	echo "$EXSISTING_USERS" >> "$WELCOME_FILE"
 
 	#Här ger vi rättigheter till rätt användare.
 	chmod 700 "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/Work"
 	chmod 600 "$WELCOME_FILE"
 
-	chown -R "$user:$user" "$USER_DIR"
-
+	chown -R "$user":"$user" "$USER_DIR"
+	chown "$user":"$user" "$WELCOME_FILE"
 	echo "$USER_DIR"
 done
 
-echo "Klart."
