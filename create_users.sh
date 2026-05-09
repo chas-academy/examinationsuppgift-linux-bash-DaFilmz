@@ -8,7 +8,7 @@ if [ "$EUID" -ne 0 ];
 	exit 1
 fi
 
-EXSISTING_USERS=$(cut -d: -f1 /etc/passwd)
+EXISTING_USERS=$(cut -d: -f1 /etc/passwd)
 
 #for loop igenom alla användare som blivit givet.
 for user in "$@"; do
@@ -29,9 +29,9 @@ for user in "$@"; do
 	WELCOME_FILE="$USER_DIR/welcome.txt"
 
 	#Lägger in text i rad.
-	echo "Välkommen $user" > "$WELCOME_FILE"
+	echo "välkommen $user" > "$WELCOME_FILE"
 	echo "Användare som redan finns:" >> "$WELCOME_FILE"
-	echo "$EXSISTING_USERS" >> "$WELCOME_FILE"
+	echo "$EXISTING_USERS" >> "$WELCOME_FILE"
 
 	#Här ger vi rättigheter till rätt användare.
 	chmod 700 "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/Work"
