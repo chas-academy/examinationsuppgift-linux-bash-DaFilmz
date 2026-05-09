@@ -31,21 +31,18 @@ for user in "$@"; do
 	#Här skapar vi filer till användaren.
 	mkdir -p "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/Work"
 
-	#skapar välkoms fil.
-	WELCOME_FILE="$USER_DIR/Welcome.txt"
-
 	#Lägger in text i rad.
 	{
 		echo "Välkommen $user"
 		awk -F: -v excemption="$user" '$1 != excemption { print $1 }' /etc/passwd
-	} > "$WELCOME_FILE"
+	} > "$USER_DIR/welcome.txt"
 
 	#Här ger vi rättigheter till rätt användare.
 	chmod 700 "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/Work"
-	chmod 600 "$WELCOME_FILE"
+	chmod 600 "$USER_DIR/welcome.txt"
 
 	chown -R "$user:$user" "$USER_DIR"
-	chown -R "$user:$user" "$WELCOME_FILE"
+	chown -R "$user:$user" "$USER_DIR/welcome.txt"
 	echo "$USER_DIR skapat"
 done
 
