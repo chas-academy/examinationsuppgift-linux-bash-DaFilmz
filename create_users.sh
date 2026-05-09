@@ -23,13 +23,13 @@ for user in "$@"; do
 	echo "Användare $user har skapats"
 
 	#Här skapar vi filer till användaren.
-	mkdir -p "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/work"
+	mkdir -p "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/Work"
 
 	#skapar välkoms fil.
-	WELCOME_FILE="$USER_DIR/welcome.txt"
+	WELCOME_FILE="$USER_DIR/Welcome.txt"
 
 	#Lägger in text i rad.
-	echo "välkommen $user" > "$WELCOME_FILE"
+	echo "Välkommen $user" > "$WELCOME_FILE"
 
 	echo "$EXISTING_USERS" >> "$WELCOME_FILE"
 
@@ -37,7 +37,7 @@ for user in "$@"; do
 	chmod 700 "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/Work"
 	chmod 600 "$WELCOME_FILE"
 
-	chown -R "$user":"$user" "$USER_DIR"
+	chown -R "$user:$user" "$USER_DIR"
 
 	echo "$USER_DIR skapat"
 done
