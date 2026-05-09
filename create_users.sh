@@ -8,19 +8,25 @@ if [ "$EUID" -ne 0 ];
 	exit 1
 fi
 
-EXISTING_USERS=$(cut -d: -f1 /etc/passwd)
-
-#for loop igenom alla användare som blivit givet.
+#Skapar användare tidigare.
 for user in "$@"; do
 	if id "$user" &>/dev/null; then
-		echo "Användarnamntet '$user' finns redan i listan."
+		echo "Användarnamnet $user finns redan och hoppas över"
 		continue
 	fi
-	#User shortcut var.
-	USER_DIR="/home/$user"
 
 	useradd -m "$user"
 	echo "Användare $user har skapats"
+done
+
+#for loop igenom alla användare som blivit givet.
+for user in "$@"; do
+	USER_DIR="/home/$user"
+
+	if [ -d "$USER_DIR/Documents" ]; then
+		echo "$user har redan mappar, fortsätter.."
+		continue
+	fi
 
 	#Här skapar vi filer till användaren.
 	mkdir -p "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/Work"
@@ -31,7 +37,7 @@ for user in "$@"; do
 	#Lägger in text i rad.
 	echo "Välkommen $user" > "$WELCOME_FILE"
 
-	echo "$EXISTING_USERS" >> "$WELCOME_FILE"
+	awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd | grep -v "^$user$" >> "$WELCOME_FILE"
 
 	#Här ger vi rättigheter till rätt användare.
 	chmod 700 "$USER_DIR/Documents" "$USER_DIR/Downloads" "$USER_DIR/Work"
@@ -42,3 +48,4 @@ for user in "$@"; do
 	echo "$USER_DIR skapat"
 done
 
+exit 0
